@@ -10,7 +10,7 @@ import { Multer } from "multer";
 // import { fileURLToPath } from "url";
 import { text_input_mock } from "../utils/AI-Mock.js";
 import extractPublicPath from "../utils/extractPublicPath.js";
-
+import bulkDelete from "../utils/bulkDelete.js";
 
 export const getMessages = async (
   req: Request,
@@ -190,11 +190,16 @@ export const clearChat = async (
 
     // const ai_res = await axios.post(`${process.env.AI_URL}/${process.env.AI_CLEAR_CHAT_ENDPOINT}`, {clear_chat: true});
     const ai_res = true;
+
+    // add messages to delete queue
+    await bulkDelete(chat.messages);
+
     if (ai_res) {
       chat.messages = [];
       await chat.save();
       return res.status(200).json({ message: "Chat Cleared" });
     }
+    
     return res.status(500).json({ error: "Failed to clear chat" });
   } catch (error) {
     console.log(error);
