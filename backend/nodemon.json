@@ -1,0 +1,17 @@
+{
+    "app": {
+      "watch": ["dist/index.js", "dist/routes", "dist/controllers", "dist/middlewares"],
+      "ignore": ["dist/workers/*"],
+      "ext": "js"
+    },
+    "deleteWorker": {
+      "watch": ["dist/workers/deleteWorker", "dist/queues/fileDeleteQueue"],
+      "ignore": ["dist/index.js", "dist/routes", "dist/controllers", "dist/middlewares"],
+      "ext": "js"
+    },
+    "sessionCleanUpWorker": {
+      "watch": ["dist/workers/sessionCleanUpWorker", "dist/queues/sessionCleanUpQueue"],
+      "ignore": ["dist/index.js", "dist/routes", "dist/controllers", "dist/middlewares"],
+      "ext": "js"
+    }
+  }
