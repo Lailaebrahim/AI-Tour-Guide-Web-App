@@ -138,7 +138,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     try {
       setIsLoading(true);
 
-      if (!blob || responseType.trim() === "") {
+      if (blob === null || blob === undefined || responseType.trim() === "") {
         throw new Error("No audio provided or response type not specified");
       }
 
@@ -233,7 +233,6 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        console.log("check session");
         setIsLoading(true);
         const data = await checksession();
         if (data) {
