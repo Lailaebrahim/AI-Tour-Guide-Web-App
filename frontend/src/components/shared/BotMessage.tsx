@@ -32,8 +32,9 @@ const BotMessage = ({ message, index }: BotMessageProps) => {
             if (user_input && user_input.trim() !== "") {
                 if (isAudioPath(user_input)) {
                     await session?.sendAudioMessage(index, "audio");
+                } else {
+                    await session?.sendTextMessage(user_input, "text");
                 }
-                await session?.sendTextMessage(user_input, "text");
             }
         } catch (error) {
             if (error instanceof Error) {
