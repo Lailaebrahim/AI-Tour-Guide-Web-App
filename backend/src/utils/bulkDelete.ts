@@ -1,7 +1,13 @@
 import fileDeleteQueue from "../queues/fileDeleteQueue.js";
 import isAudioPath from "./isAudioPath.js";
 
-const bulkDelete = async (messages) => {
+type Message = {
+  userMessage: string;
+  botMessage: string;
+  createdAt: Date;
+};
+
+const bulkDelete = async (messages: Message[]) => {
   const audioMessages = messages.filter((message) => {
     return isAudioPath(message.userMessage) || isAudioPath(message.botMessage);
   });
@@ -11,6 +17,7 @@ const bulkDelete = async (messages) => {
     
     if (isAudioPath(message.userMessage)) {
       jobs.push({
+        name: 'delete-file',
         data: {
           filePath: message.userMessage,
         }
@@ -19,6 +26,7 @@ const bulkDelete = async (messages) => {
     
     if (isAudioPath(message.botMessage)) {
       jobs.push({
+        name: 'delete-file',
         data: {
           filePath: message.botMessage,
         }

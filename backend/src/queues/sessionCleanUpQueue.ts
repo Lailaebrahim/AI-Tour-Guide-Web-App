@@ -35,7 +35,6 @@ connectDB()
           createdAt: { $lt: new Date(Date.now() - 24 * 3600000) },
         });
         if (sessions.length === 0) {
-          console.log("No sessions to clean up");
           return [];
         }
         const results = [];

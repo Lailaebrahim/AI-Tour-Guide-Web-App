@@ -1,5 +1,6 @@
 import Queue from "bull";
 import fs from "fs/promises";
+import path from "path";
 
 const fileDeleteQueue = new Queue("file-deletion", {
   redis: {
@@ -15,16 +16,16 @@ const fileDeleteQueue = new Queue("file-deletion", {
   },
 });
 
-fileDeleteQueue.process(async (job) => {
+fileDeleteQueue.process('delete-file', async (job) => {
   const { filePath } = job.data;
   try {
+    
+    const fullPath = path.join(process.env.FILES_BASE_URL, filePath);
+    await fs.access(fullPath);
+    await fs.unlink(fullPath);
 
-    await fs.access(filePath);
-    await fs.unlink(filePath);
-
-    console.log(`Delete worker Successfully deleted file: ${filePath}`);
-
-    return { success: true };
+    console.log(`Delete worker Successfully deleted file: ${fullPath}`);
+    return { success: true, filePath };
 
   } catch (error) {
     if (error.code === "ENOENT") {
