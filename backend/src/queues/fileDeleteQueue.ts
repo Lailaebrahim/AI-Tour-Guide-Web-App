@@ -13,6 +13,10 @@ const fileDeleteQueue = new Queue("file-deletion", {
       type: "exponential",
       delay: 2000,
     },
+    removeOnComplete: {
+      age: 3600
+    },
+    removeOnFail: 1000, 
   },
 });
 

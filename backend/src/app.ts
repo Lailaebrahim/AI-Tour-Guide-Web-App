@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import jsend from "jsend";
 import cors from "cors";
 import appRouter from "./routes/index.routes.js";
+import serverAdapter from './bullboard.js';
 
 
 const app = express();
@@ -15,11 +16,12 @@ app.use(cors({
     credentials: true
   }));
 app.use(jsend.middleware);
-app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
-
-
+if (process.env.NODE_ENV === "development") {
+    app.use(morgan("dev"));
+    app.use('/admin/queues', serverAdapter.getRouter());
+}
 app.use("/api/v1", appRouter);
 
 

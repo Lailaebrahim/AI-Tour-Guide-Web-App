@@ -39,6 +39,9 @@
     "uuid": "^11.0.3"
   },
   "devDependencies": {
+    "@bull-board/api": "^6.6.1",
+    "@bull-board/express": "^6.6.1",
+    "@bull-board/ui": "^6.6.1",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
