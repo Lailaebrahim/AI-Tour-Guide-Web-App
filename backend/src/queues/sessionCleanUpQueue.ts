@@ -2,6 +2,9 @@ import Queue from "bull";
 import Chat from "../models/Chat.js";
 import bulkDelete from "../utils/bulkDelete.js";
 import { connectDB } from "../db/dbClient.js";
+import { config } from "dotenv";
+
+config();
 
 const sessionCleanUpQueue = new Queue("session-cleanup", {
   redis: {

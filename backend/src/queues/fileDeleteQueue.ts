@@ -1,6 +1,9 @@
 import Queue from "bull";
 import fs from "fs/promises";
 import path from "path";
+import { config } from "dotenv";
+
+config();
 
 const fileDeleteQueue = new Queue("file-deletion", {
   redis: {

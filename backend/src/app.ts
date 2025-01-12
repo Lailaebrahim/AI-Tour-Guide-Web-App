@@ -18,7 +18,7 @@ app.use(cors({
 app.use(jsend.middleware);
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
-if (process.env.NODE_ENV === "development") {
+if (true) {
     app.use(morgan("dev"));
     app.use('/admin/queues', serverAdapter.getRouter());
 }
