@@ -14,9 +14,9 @@ const Header = () => {
         height: {
           xs: "30px",
           sm: "30px",
-          md: "50px",
-          lg: "50px",
-          xl: "70px"
+          md: "40px",
+          lg: "40px",
+          xl: "60px"
         }
       }}
     >
@@ -51,9 +51,8 @@ const Header = () => {
             }}
           >
             <LiaAnkhSolid
-              size={35}
               color="goldenrod"
-              style={{ flexShrink: 0 }}
+              style={{ flexShrink: 0, fontSize: "clamp(15px, 4vw, 40px)" }}
             />
             <Typography
               variant="h1"
@@ -71,7 +70,7 @@ const Header = () => {
               }}
             >
               <Link to="/chat" style={{ textDecoration: "none", color: "goldenrod" }}>
-                Khafura
+              Project 1
               </Link>
             </Typography>
           </Box>
@@ -81,7 +80,12 @@ const Header = () => {
               display: "flex",
               alignItems: "center",
               padding: "0 26px",
-              height: "100%"
+              height: "100%",
+              transition: "transform 0.3s ease, opacity 0.3s ease",
+              "&:hover": {
+                transform: "scale(1.02)",
+                opacity: 0.9
+              }
             }}
           >
             <Link to="/about" style={{ textDecoration: "none", color: "goldenrod" }}>

@@ -1,12 +1,6 @@
 import { AudioRecorder } from "react-audio-voice-recorder";
 import { useSession } from "../../context/SessionContext";
 import { toast } from "react-hot-toast";
-// import { AiTwotoneAudio } from "react-icons/ai";
-// import { useState } from "react";
-
-// type AudioRecorderComponentProps = {
-//    responseType: string;
-// };
 
 const AudioRecorderComponent = () => {
   const session = useSession();
@@ -17,7 +11,6 @@ const AudioRecorderComponent = () => {
         type: blob.type,
         lastModified: Date.now(),
       });
-      // await session?.sendAudioMessage(audio, props.responseType);
       await session?.sendAudioMessage(audio, "audio");
     } catch (error) {
       toast.error((error as Error).message);

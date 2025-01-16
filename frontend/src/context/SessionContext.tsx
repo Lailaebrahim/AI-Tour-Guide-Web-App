@@ -8,7 +8,7 @@ import {
 } from "react";
 import {
   checkSession as checksession,
-  getMessages as getMsgs,
+  // getMessages as getMsgs,
   sendTextMessage as sendTxtMsg,
   clearChatHistory,
   sendAudioMessage as sendAudioMsg,
@@ -29,7 +29,7 @@ type Session = {
   isLoading: boolean;
   sessionId: string | null;
   messages: message[];
-  getMessages: (page: number) => Promise<void>;
+  // getMessages: (page: number) => Promise<void>;
   sendTextMessage: (user_input: string, responseType: string) => Promise<void>;
   clearChat: () => Promise<void>;
   sendAudioMessage: (
@@ -77,28 +77,26 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   //   }
   // }, [sessionId]);
 
-
-
-  const getMessages = async (page: number) => {
-    try {
-      console.log(page);
-      const data = await getMsgs(page);
-      if (data) {
-        console.log(page);
-        console.log(data.messages.length);
-        setMessages((prevMessages) => [...data.messages, ...prevMessages]);
-        setIsLoading(false);
-        return data.messages.length;
-      }
-    } catch (error) {
-      setIsLoading(false);
-      if (error instanceof Error) {
-        console.log(error.message);
-      } else {
-        console.log("Unknown Error");
-      }
-    }
-  };
+  // const getMessages = async (page: number) => {
+  //   try {
+  //     console.log(page);
+  //     const data = await getMsgs(page);
+  //     if (data) {
+  //       console.log(page);
+  //       console.log(data.messages.length);
+  //       setMessages((prevMessages) => [...data.messages, ...prevMessages]);
+  //       setIsLoading(false);
+  //       return data.messages.length;
+  //     }
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     if (error instanceof Error) {
+  //       console.log(error.message);
+  //     } else {
+  //       console.log("Unknown Error");
+  //     }
+  //   }
+  // };
 
   const sendTextMessage = async (user_input: string, responseType: string) => {
     try {
@@ -179,7 +177,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
       if (blob instanceof Blob) {
         data = await saveAudioMsg(blob);
       } else {
-        data = await retryMessage(blob);
+        data = retryMessage(blob);
       }
 
       if (data) {
@@ -291,7 +289,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     sessionId,
     messages,
     // page,
-    getMessages,
+    // getMessages,
     sendTextMessage,
     clearChat,
     sendAudioMessage,

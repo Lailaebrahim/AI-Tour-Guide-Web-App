@@ -13,15 +13,6 @@ export const checkSession = async () => {
     return res.data;
 }
 
-export const getMessages = async (page: number) => {
-    const res = await axios.get(`/chat/messages?page=${page}`);
-    if (res.status !== 200)
-    {
-        throw new Error(res.data.error);
-    }
-    return res.data;
-}
-
 export const sendTextMessage = async(user_input: string, responseType: string) =>{
     const res = await axios.post('/chat/send-text-message', {user_input, responseType});
     if (res.status !== 200)
@@ -60,8 +51,9 @@ export const saveAudioMessage = async(audio: Blob) =>{
     return res.data;
 }
 
-export const getMessage = async(index: number) =>{
-    const res = await axios.get(`/chat/message/${index}`);
+export const toAudio = async(index: number) =>{
+    console.log(index);
+    const res = await axios.post(`/chat/to-audio/${index}`);
     if (res.status !== 200)
     {
         throw new Error(res.data.error);
@@ -71,16 +63,6 @@ export const getMessage = async(index: number) =>{
 
 export const retryMessage = async(index: number) =>{
     const res = await axios.post(`/chat/retry-message/${index}`);
-    if (res.status !== 200)
-    {
-        throw new Error(res.data.error);
-    }
-    return res.data;
-}
-
-export const toAudio = async(index: number) =>{
-    console.log(index);
-    const res = await axios.post(`/chat/to-audio/${index}`);
     if (res.status !== 200)
     {
         throw new Error(res.data.error);

@@ -9,10 +9,9 @@ import { useSession } from '../../context/SessionContext';
 import { isAudioPath } from '../../utils/pathChecker';
 import Message from './Message';
 
-interface BotMessageProps {
+type BotMessageProps = {
     message: string;
     index: number;
-    // responseType: string;
 }
 
 const BotMessage = ({ message, index }: BotMessageProps) => {

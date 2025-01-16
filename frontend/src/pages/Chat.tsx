@@ -14,7 +14,7 @@ import ToTopButton from '../components/shared/ToTopButton';
 import AudioRecorderComponent from '../components/shared/AudioRecorder';
 
 
-interface Message {
+type Message = {
   userMessage: string;
   botMessage: string;
   createdAt: Date;
@@ -30,12 +30,10 @@ const Chat = () => {
   const [showSendButton, setShowSendButton] = useState(false);
   const [showAudioRecorder, setShowAudioRecorder] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
-  // const [responseType, setResponseType] = useState<string>("text");
 
   // initial view
   useEffect(() => {
     if ((session?.messages?.length ?? 0) > 0) {
-      // setResponseType("text");
       setIsInitialView(false);
       setTimeout(() => {
         scrollContainerRef.current?.scrollTo({
@@ -71,7 +69,6 @@ const Chat = () => {
       if (!userTextInput.trim()) return;
       setUserTextInput("");
       setShowSendButton(false);
-      // await session?.sendTextMessage(userTextInput, responseType);
       await session?.sendTextMessage(userTextInput, "text");
       setIsInitialView(false);
     } catch (error) {
@@ -93,8 +90,13 @@ const Chat = () => {
         height: '100vh'
       }}
     >
-
-      <Header />
+      {
+        isInitialView ? (
+          null
+        ) : (
+          <Header />
+        )
+      }
 
       <Box
         ref={scrollContainerRef}
@@ -156,7 +158,7 @@ const Chat = () => {
                   textShadow: '2px 2px 16px rgba(0, 0, 0, 0.5)'
                   }}
                 >
-                  Welcome to Khafura
+                  Welcome to Project 1
                 </Typography>
               </Box>
 
@@ -251,12 +253,6 @@ const Chat = () => {
                 margin: '20px auto',
               }}>
 
-              {/* {isLoadingMore && renderLoadingIndicator()}
-                {!hasMoreMessages && (
-                  <Typography sx={{ textAlign: 'center', padding: '10px' }}>
-                    No more messages to load
-                  </Typography>
-                )} */}
               {session?.messages?.map((message: Message, index: number) => (
                 <Fragment 
                   key={index}>
@@ -277,8 +273,6 @@ const Chat = () => {
                       <Typography variant="body2">Thinking...</Typography>
                     </Box>
                   ) : (
-                    // Display the BotMessage component when botMessage has a valid value
-                    // <BotMessage message={message.botMessage} index={index} responseType={responseType} />
                     <BotMessage message={message.botMessage} index={index} />
                   )}
 
@@ -289,7 +283,6 @@ const Chat = () => {
         </Box>
 
       </Box>
-
 
       {/* bottom input at long chat */}
       {!isInitialView && (
@@ -358,44 +351,6 @@ const Chat = () => {
               fontFamily: 'Roboto'
             }}
           >
-            {/* Response Type Selector */}
-            {/* <Box sx={{ gridArea: 'selector', alignSelf: 'end' }}>
-              <Box
-                component="select"
-                onChange={(e) => setResponseType(e.target.value)}
-                sx={{
-                  padding: {
-                    xs: '4px',
-                    sm: '6px',
-                    md: '8px'
-                  },
-                  fontSize: {
-                    xs: '12px',
-                    sm: '14px',
-                    md: '16px'
-                  },
-                  backgroundColor: 'transparent',
-                  color: 'goldenrod',
-                  border: '1px solid goldenrod',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  // Optional: add more responsive styles
-                  width: {
-                    xs: '100px',
-                    sm: '120px',
-                    md: '140px'
-                  },
-                  '&:focus': {
-                    outline: 'none',
-                    borderColor: 'goldenrod',
-                  }
-                }}
-              >
-                <option disabled>Select Response Type</option>
-                <option value="text">Text</option>
-                <option value="audio">Audio</option>
-              </Box>
-            </Box> */}
 
             {/* Text Input */}
             <CustomInput
@@ -436,7 +391,6 @@ const Chat = () => {
                     }}
                   />
                 ) : showAudioRecorder && (
-                  // <AudioRecorderComponent responseType={responseType} />
                   <AudioRecorderComponent />
                 )}
               </Box>

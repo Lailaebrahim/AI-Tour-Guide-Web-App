@@ -1,7 +1,7 @@
 import './App.css'
 import { Routes, Route } from "react-router-dom";
 import Chat from './pages/Chat';
-import Home from './pages/Home';
+import About from './pages/About';
 import NotFound from './pages/NotFound';
 import { useSession } from './context/SessionContext';
 
@@ -12,9 +12,9 @@ function App() {
       <Routes>
         {
           session?.sessionId &&
-          <Route path="/chat" element={<Chat />} />
+          <Route path="/" element={<Chat />} />
         }
-        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </main>
