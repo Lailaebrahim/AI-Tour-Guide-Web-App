@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useState,
+  // useRef,
 } from "react";
 import {
   checkSession as checksession,
@@ -16,6 +17,7 @@ import {
   retryMessage,
   toAudio as convertToAudio,
 } from "../helpers/api-communicator";
+// import { io, Socket } from "socket.io-client";
 
 type message = {
   userMessage: string;
@@ -27,7 +29,6 @@ type Session = {
   isLoading: boolean;
   sessionId: string | null;
   messages: message[];
-  // page: number,
   getMessages: (page: number) => Promise<void>;
   sendTextMessage: (user_input: string, responseType: string) => Promise<void>;
   clearChat: () => Promise<void>;
@@ -38,13 +39,45 @@ type Session = {
   toAudio: (index: number) => Promise<void>;
 };
 
+
+// const SOCKET_URL = 'http://localhost:5000';
 const SessionContext = createContext<Session | null>(null);
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  // const [page, setPage] = useState<number>(1);
+  // const socketRef = useRef<typeof Socket | null>(null);
+
+  // useEffect(() => {
+  //   if (sessionId) {
+  //     socketRef.current = io(SOCKET_URL, {
+  //       query: { sessionId },
+  //     });
+
+  //     // Listen for incoming messages
+  //     // socketRef.current?.on('botResponse', (message: message) => {
+  //     //   setMessages(prevMessages => {
+  //     //     const updatedMessages = [...prevMessages];
+  //     //     updatedMessages[updatedMessages.length - 1] = message;
+  //     //     return updatedMessages;
+  //     //   });
+  //     //   setIsLoading(false);
+  //     // });
+
+  //     // Handle connection errors
+  //     socketRef.current?.on('connect_error', (error: Error) => {
+  //       console.error('Socket connection error:', error);
+  //       setIsLoading(false);
+  //     });
+
+  //     return () => {
+  //       socketRef.current?.disconnect();
+  //     };
+  //   }
+  // }, [sessionId]);
+
+
 
   const getMessages = async (page: number) => {
     try {
