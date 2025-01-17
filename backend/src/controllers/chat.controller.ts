@@ -12,35 +12,6 @@ import { text_input_mock } from "../utils/AI-Mock.js";
 import extractPublicPath from "../utils/extractPublicPath.js";
 import bulkDelete from "../utils/bulkDelete.js";
 
-export const getMessages = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const sessionId = res.locals.sessionId;
-    const page = parseInt(req.query.page as string) || 2;
-
-    if (sessionId) {
-      const chat = await Chat.findOne({ sessionId });
-      if (chat) {
-        const messagesPerPage = parseInt(process.env.MESSAGES_PER_PAGE);
-        const totalMessages = chat.messages.length;
-        const startIndex = Math.max(totalMessages - page * messagesPerPage, 0);
-        const endIndex = totalMessages - (page - 1) * messagesPerPage;
-
-        const messages = chat.messages.slice(startIndex, endIndex).reverse();
-
-        return res.status(200).json({ messages });
-      } else {
-        return res.status(404).json({ error: "No Chat Found" });
-      }
-    }
-    return res.status(404).json({ error: "Session Not Found" });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-};
 
 export const checkSession = async (
   req: Request,

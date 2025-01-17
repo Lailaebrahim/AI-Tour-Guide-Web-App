@@ -1,41 +1,39 @@
 import jwt from "jsonwebtoken";
 import { Response } from "express";
 
-
-const createSessionJwt = (id: string) =>{
-    const payload ={id};
-    const sessionJwt = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN
-    });
-    return sessionJwt;
-}
+const createSessionJwt = (id: string) => {
+  const payload = { id };
+  const sessionJwt = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+  return sessionJwt;
+};
 
 const removeCookie = (res: Response) => {
-    res.clearCookie("sessionJwt", {
-        path: "/",
-        domain: process.env.DOMAIN,
-        httpOnly: true,
-        signed: true,
-        secure: true,
-        sameSite: "none"
-    });
-    return res;
-}
+  res.clearCookie("sessionJwt", {
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+    domain: process.env.DOMAIN,
+    path: "/",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+  return res;
+};
 
 const setCookie = (res: Response, id: string) => {
-    const sessionJwt = createSessionJwt(id);
+  const sessionJwt = createSessionJwt(id);
 
-    res.cookie('sessionJwt', sessionJwt, {
-        path: "/",
-        domain:  process.env.DOMAIN,
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
-        signed: true,
-        secure: true,
-        sameSite: "none"
-    });
+  res.cookie("sessionJwt", sessionJwt, {
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+    domain: process.env.DOMAIN,
+    path: "/",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
 
-    return res;
-}
+  return res;
+};
 
-export {setCookie, removeCookie};
+export { setCookie, removeCookie };

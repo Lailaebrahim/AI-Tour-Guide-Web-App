@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 axios.defaults.withCredentials = true
-axios.defaults.baseURL = 'http://localhost:5000/api/v1';
+axios.defaults.baseURL = `${import.meta.env.BACKEND_BASE_URL}`;
 
 
 export const checkSession = async () => {

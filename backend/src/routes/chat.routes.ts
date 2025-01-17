@@ -1,12 +1,10 @@
 import { Router } from "express";
 import {
-  getMessages,
   checkSession,
   sendTextMessage,
   clearChat,
   saveAudioMessage,
   sendAudioMessage,
-  getMessage,
   retryMessage,
   toAudio,
 } from "../controllers/chat.controller.js";
@@ -21,7 +19,6 @@ import uploadAudioMiddleware from "../midllewares/audioUpload.js";
 const chatRouter = Router();
 
 chatRouter.get("/session-status", checkSession);
-chatRouter.get("/messages", verifySessionJwt, getMessages);
 chatRouter.delete("/clear-chat", verifySessionJwt, clearChat);
 chatRouter.post(
   "/send-text-message",
@@ -37,7 +34,6 @@ chatRouter.post(
   uploadAudioMiddleware,
   saveAudioMessage
 );
-chatRouter.get("/message/:index", verifySessionJwt, getMessage);
 chatRouter.post("/retry-message/:index", verifySessionJwt, retryMessage);
 chatRouter.post("/to-audio/:index", verifySessionJwt, toAudio);
 
