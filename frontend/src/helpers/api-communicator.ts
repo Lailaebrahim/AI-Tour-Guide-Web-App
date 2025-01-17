@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 axios.defaults.withCredentials = true
-axios.defaults.baseURL = `${import.meta.env.BACKEND_BASE_URL}`;
+axios.defaults.baseURL = 'http://localhost:5000/api/v1';
 
 
 export const checkSession = async () => {
@@ -52,7 +52,6 @@ export const saveAudioMessage = async(audio: Blob) =>{
 }
 
 export const toAudio = async(index: number) =>{
-    console.log(index);
     const res = await axios.post(`/chat/to-audio/${index}`);
     if (res.status !== 200)
     {

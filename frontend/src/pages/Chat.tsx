@@ -215,20 +215,24 @@ const Chat = () => {
                   gridColumn: '2',
                   gridRow: '2',
                   justifySelf: 'end',
-                  alignSelf: 'center'
+                  alignSelf: 'center',
+                  opacity: session?.isLoading ? 0.7 : 1,
+                  pointerEvents: session?.isLoading ? 'none' : 'auto'
                 }}>
                   {showSendButton ? (
                     <IoMdSend
                       id="send_initial"
                       size={30}
-                      color="goldenrod"
-                      onClick={handleSendTextMessage}
+                      color={session?.isLoading ? "gray" : "goldenrod"}
+                      onClick={session?.isLoading ? undefined : handleSendTextMessage}
                       style={{
-                        cursor: 'pointer',
+                        cursor: session?.isLoading ? 'not-allowed' : 'pointer',
+                        opacity: session?.isLoading ? 0.5 : 1,
+                        transition: 'all 0.2s ease'
                       }}
                     />
                   ) : showAudioRecorder && (
-                    <AudioRecorderComponent />
+                    <AudioRecorderComponent disabled={session?.isLoading || false} />
                   )}
                 </Box>
               </Box>
@@ -375,25 +379,30 @@ const Chat = () => {
 
             {/* Send Button */}
             <Box sx={{ gridArea: 'send', alignSelf: 'end' }}>
-              <Box sx={{
-                justifySelf: 'end',
-                alignSelf: 'end',
-                marginRight: '10px'
-              }}>
-                {showSendButton ? (
-                  <IoMdSend
-                    id="send_initial"
-                    size={30}
-                    color="goldenrod"
-                    onClick={handleSendTextMessage}
-                    style={{
-                      cursor: 'pointer',
-                    }}
-                  />
-                ) : showAudioRecorder && (
-                  <AudioRecorderComponent />
-                )}
-              </Box>
+            <Box sx={{
+                  gridColumn: '2',
+                  gridRow: '2',
+                  justifySelf: 'end',
+                  alignSelf: 'center',
+                  opacity: session?.isLoading ? 0.7 : 1,
+                  pointerEvents: session?.isLoading ? 'none' : 'auto'
+                }}>
+                  {showSendButton ? (
+                    <IoMdSend
+                      id="send_initial"
+                      size={30}
+                      color={session?.isLoading ? "gray" : "goldenrod"}
+                      onClick={session?.isLoading ? undefined : handleSendTextMessage}
+                      style={{
+                        cursor: session?.isLoading ? 'not-allowed' : 'pointer',
+                        opacity: session?.isLoading ? 0.5 : 1,
+                        transition: 'all 0.2s ease'
+                      }}
+                    />
+                  ) : showAudioRecorder && (
+                    <AudioRecorderComponent disabled={session?.isLoading || false} />
+                  )}
+                </Box>
             </Box>
 
           </Box>

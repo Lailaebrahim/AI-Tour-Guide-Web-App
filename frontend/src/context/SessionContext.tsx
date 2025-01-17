@@ -29,7 +29,6 @@ type Session = {
   isLoading: boolean;
   sessionId: string | null;
   messages: message[];
-  // getMessages: (page: number) => Promise<void>;
   sendTextMessage: (user_input: string, responseType: string) => Promise<void>;
   clearChat: () => Promise<void>;
   sendAudioMessage: (
@@ -177,7 +176,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
       if (blob instanceof Blob) {
         data = await saveAudioMsg(blob);
       } else {
-        data = retryMessage(blob);
+        data = await retryMessage(blob);
       }
 
       if (data) {
@@ -226,6 +225,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
   const toAudio = async (index: number) => {
     try {
+      setIsLoading(true);
       if (index >= 0) {
         console.log("index: ", index);
 
@@ -258,6 +258,8 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
       } else {
         console.log("Unknown Error occurred");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 

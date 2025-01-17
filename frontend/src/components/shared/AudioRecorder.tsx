@@ -2,11 +2,20 @@ import { AudioRecorder } from "react-audio-voice-recorder";
 import { useSession } from "../../context/SessionContext";
 import { toast } from "react-hot-toast";
 
-const AudioRecorderComponent = () => {
+type AudioRecorderComponentProps = {
+  disabled: boolean;
+};
+
+const AudioRecorderComponent = ({disabled}: AudioRecorderComponentProps) => {
   const session = useSession();
 
   const addAudioElement = async (blob: Blob) => {
     try {
+      if (disabled){
+        toast.error("wait for the bot to respond before sending another audio message");
+        return;
+      };
+
       const audio = new File([blob], "audio.mp3", {
         type: blob.type,
         lastModified: Date.now(),
@@ -24,8 +33,8 @@ const AudioRecorderComponent = () => {
         noiseSuppression: true,
         echoCancellation: true,
       }}
-      onNotAllowedOrFound={(status) => {
-        console.log(status);
+      onNotAllowedOrFound={() => {
+        toast.error("Microphone not found or permission not granted");
       }}
       showVisualizer={true}
       downloadFileExtension="mp3"
