@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 axios.defaults.withCredentials = true
-axios.defaults.baseURL = 'http://localhost:5000/api/v1';
+axios.defaults.baseURL = 'https://project1.lailaebrahim.tech/api/v1';
 
 
 export const checkSession = async () => {
