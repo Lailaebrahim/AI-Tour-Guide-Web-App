@@ -2,13 +2,14 @@ import { v4 as UUID } from "uuid";
 import Chat from "../models/Chat.js";
 import jwt from "jsonwebtoken";
 import fs from "fs/promises";
-// import { createWriteStream } from "fs";
-// import { join, dirname } from "path";
-// import path from "path";
-// import { fileURLToPath } from "url";
+import axios from "axios";
+import { readFileSync, writeFile } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import { text_input_mock } from "../utils/AI-Mock.js";
 import extractPublicPath from "../utils/extractPublicPath.js";
 import bulkDelete from "../utils/bulkDelete.js";
+import { Blob } from "buffer";
 export const checkSession = async (req, res, next) => {
     try {
         const sessionJwt = req.signedCookies.sessionJwt;
@@ -80,23 +81,19 @@ export const sendTextMessage = async (req, res, next) => {
                 .status(401)
                 .json({ error: "No Chat associated to this session ID" });
         const { user_input, responseType } = req.body;
-        // if (responseType === "audio") {
-        //     const AI_ENDPOINT = process.env.AI_TEXT_INPUT_AUDIO_OUTPUT_ENDPOINT;
-        // } else {
-        //   const AI_ENDPOINT = process.env.AI_TEXT_INPUT_TEXT_OUTPUT_ENDPOINT;
-        // }
-        // const ai_res = await axios.post(`${process.env.AI_URL}/${AI_ENDPOINT}`, {user_input});
-        const ai_res = await text_input_mock(user_input, responseType);
+        const ai_res = await axios.post(`${process.env.AI_TEXT_INPUT_TEXT_OUTPUT_ENDPOINT}`, { description: user_input });
+        const ret = ai_res.data.response;
+        // const ai_res = await text_input_mock(user_input, responseType);
         if (ai_res) {
             chat.messages.push({
                 userMessage: user_input,
-                botMessage: ai_res,
+                botMessage: ret,
                 createdAt: new Date(),
             });
             await chat.save();
             return res
                 .status(200)
-                .json({ message: { userMessage: user_input, botMessage: ai_res } });
+                .json({ message: { userMessage: user_input, botMessage: ret } });
         }
         return res.status(500).json({ error: "Failed to send message" });
     }
@@ -122,8 +119,7 @@ export const clearChat = async (req, res, next) => {
             return res
                 .status(401)
                 .json({ error: "No Chat associated to this session ID" });
-        // const ai_res = await axios.post(`${process.env.AI_URL}/${process.env.AI_CLEAR_CHAT_ENDPOINT}`, {clear_chat: true});
-        const ai_res = true;
+        const ai_res = await axios.post(`${process.env.AI_CLEAR_CHAT_ENDPOINT}`);
         // add messages to delete queue
         await bulkDelete(chat.messages);
         if (ai_res) {
@@ -240,44 +236,33 @@ export const sendAudioMessage = async (req, res, next) => {
         const message = chat.messages[index];
         if (!message)
             return res.status(404).send({ error: "No message found at this index" });
-        // if (responseType === "audio") {
-        //     const AI_ENDPOINT = process.env.AI_AUDIO_INPUT_AUDIO_OUTPUT_ENDPOINT;
-        // } else {
-        //     const AI_ENDPOINT = process.env.AI_AUDIO_INPUT_TEXT_OUTPUT_ENDPOINT;
-        // }
-        // const formData = new FormData();
-        //
-        // formData.append('user_input', fs.createReadStream(`${process.env.PUBLIC_PATH}/${message.userMessage}`));
-        //
-        // const ai_res = await axios.post(`${process.env.AI_URL}/${AI_ENDPOINT}`, formData, {
-        //     headers: {
-        //         'Content-Type': 'multipart/form-data',
-        //     },
-        //     responseType: 'stream',
-        // });
-        // const timestamp = Date.now();
-        // const randomString = Math.random().toString(36).substring(7);
-        // const fileName = `ai-response-${timestamp}-${randomString}.mp3`;
-        // const dirPath = fileURLToPath(dirname(import.meta.url));
-        // const outputFilePath = join(dirPath, `../../../${process.env.FRONTEND_PUBLIC_DIR}/sessions/${sessionId}/${fileName}`);
-        // const writer = createWriteStream(outputFilePath);
-        // ai_res.data.pipe(writer);
-        // await new Promise((resolve, reject) => {
-        //         writer.on('finish', resolve);
-        //         writer.on('error', reject);
-        //     });
-        // console.log('Audio file saved locally:', outputFilePath);
-        // const relativePath = extractPublicPath(outputFilePath);
-        // message.botMessage = relativePath;
-        // await chat.save();
-        // return res.status(200).send({ message });
-        const ai_res = await text_input_mock(message.userMessage, responseType);
-        if (ai_res) {
-            message.botMessage = ai_res;
-            await chat.save();
-            return res.status(200).send({ message });
-        }
-        return res.status(500).send({ error: "Failed to send message" });
+        const formData = new FormData();
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = dirname(__filename);
+        const file = readFileSync(join(__dirname, `../../../${process.env.PUBLIC_PATH}/${message.userMessage}`));
+        const blob = new Blob([file], { type: 'audio/mp3' });
+        formData.append('audio_file', blob, 'audio.mp3');
+        const ai_res = await axios.post(`${process.env.AI_AUDIO_INPUT_AUDIO_OUTPUT_ENDPOINT}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        const ret = ai_res.data.audio_response;
+        const timestamp = Date.now();
+        const randomString = Math.random().toString(36).substring(7);
+        const fileName = `ai-response-${timestamp}-${randomString}.mp3`;
+        const dirPath = fileURLToPath(dirname(import.meta.url));
+        const outputFilePath = join(dirPath, `../../../${process.env.PUBLIC_PATH}/sessions/${sessionId}/${fileName}`);
+        const buffer = Buffer.from(ret, 'base64');
+        await writeFile(outputFilePath, buffer, (err) => {
+            if (err)
+                throw err;
+        });
+        console.log('Audio file saved locally:', outputFilePath);
+        const relativePath = extractPublicPath(outputFilePath);
+        message.botMessage = relativePath;
+        await chat.save();
+        return res.status(200).send({ message });
     }
     catch (error) {
         console.log(error);

@@ -1,13 +1,7 @@
 import jwt from "jsonwebtoken";
 import { Response } from "express";
 
-const createSessionJwt = (id: string) => {
-  const payload = { id };
-  const sessionJwt = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
-  return sessionJwt;
-};
+
 
 const removeCookie = (res: Response) => {
   res.clearCookie("sessionJwt", {
@@ -19,6 +13,14 @@ const removeCookie = (res: Response) => {
     maxAge: 24 * 60 * 60 * 1000,
   });
   return res;
+};
+
+const createSessionJwt = (id: string) => {
+  const payload = { id };
+  const sessionJwt = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+  return sessionJwt;
 };
 
 const setCookie = (res: Response, id: string) => {

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sequence Diagram Animation</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true});</script>
+  <style>
+    .mermaid {
+      text-align: center;
+      margin: 2rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sequence Diagram Animation</h1>
+  <div class="mermaid">
+    sequenceDiagram
+    box rgb(144, 200, 144) Backend System
+    participant B as Backend Server
+    end
+    Note over B,AR: WebSocket Connection Layer
+    
+    box rgb(255, 255, 133) ROS System
+    participant AR as Audio Receiver Node
+    participant MT as /audio_metadata Topic
+    participant AS as /audio_stream Topic
+    participant SC as /audio_save_complete Topic
+    end
+    
+    Note over B,MT: 1. Metadata Transmission
+    B->>MT: Publish metadata
+    MT->>AR: ROS topic subscription
+    Note over AR: Initialize for new file
+    
+    Note over B,AR: 2. Audio Transfer
+    loop Chunk Transfer
+    B->>AS: Stream audio chunk 
+    AS->>AR: ROS topic subscription
+    end
+    B->>AS: Empty chunk (EOF signal)
+    Note over AR: Save Audio
+    
+    AR->>SC: Publish completion signal
+    SC->>B: completion signal received
+    </div>
+</body>
+</html>
