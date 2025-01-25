@@ -1,11 +1,4 @@
 import jwt from "jsonwebtoken";
-const createSessionJwt = (id) => {
-    const payload = { id };
-    const sessionJwt = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN,
-    });
-    return sessionJwt;
-};
 const removeCookie = (res) => {
     res.clearCookie("sessionJwt", {
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
@@ -16,6 +9,13 @@ const removeCookie = (res) => {
         maxAge: 24 * 60 * 60 * 1000,
     });
     return res;
+};
+const createSessionJwt = (id) => {
+    const payload = { id };
+    const sessionJwt = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+    });
+    return sessionJwt;
 };
 const setCookie = (res, id) => {
     const sessionJwt = createSessionJwt(id);
