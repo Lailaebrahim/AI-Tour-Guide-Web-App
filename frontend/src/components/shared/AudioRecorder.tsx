@@ -1,5 +1,5 @@
 import { AudioRecorder } from "react-audio-voice-recorder";
-import { useSession } from "../../context/SessionContext";
+import { useSession } from "../../context/useSession";
 import { toast } from "react-hot-toast";
 
 type AudioRecorderComponentProps = {

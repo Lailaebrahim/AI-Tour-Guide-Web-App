@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 axios.defaults.withCredentials = true
-axios.defaults.baseURL = 'http://localhost:5000/api/v1';
+axios.defaults.baseURL = 'http://localhost:5001/api/v1';
 
 
 export const checkSession = async () => {
@@ -23,6 +23,7 @@ export const sendTextMessage = async(user_input: string, responseType: string) =
 }
 
 export const clearChatHistory = async() =>{
+    console.log("Clearing chat history");
     const res = await axios.delete('/chat/clear-chat');
     if (res.status !== 200)
     {

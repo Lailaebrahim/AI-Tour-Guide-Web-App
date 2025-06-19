@@ -4,7 +4,7 @@ import { Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import Modal from '../shared/Modal';
-import { useSession } from "../../context/SessionContext";
+import { useSession } from "../../context/useSession";
 
 const ClearButton = () => {
     const [isOpen, setIsOpen] = useState(false);

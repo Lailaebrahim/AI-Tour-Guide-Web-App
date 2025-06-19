@@ -5,7 +5,7 @@ import { FaRegCopy } from "react-icons/fa6";
 import { LuAudioLines } from "react-icons/lu";
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { useSession } from '../../context/SessionContext';
+import { useSession } from '../../context/useSession';
 import { isAudioPath } from '../../utils/pathChecker';
 import Message from './Message';
 

@@ -5,7 +5,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import { Toaster } from 'react-hot-toast';
 import './index.css'
 import App from './App.tsx'
-import {SessionProvider }from './context/SessionContext.tsx'
+import {SessionProvider }from './context/SessionProvider.tsx'
 
 const theme = createTheme({
   typography: {

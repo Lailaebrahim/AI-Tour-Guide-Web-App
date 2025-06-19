@@ -4,7 +4,7 @@ import { Box, Typography, CircularProgress } from '@mui/material';
 import { LiaAnkhSolid } from "react-icons/lia";
 import { IoMdSend } from "react-icons/io";
 import Header from '../components/Header';
-import { useSession } from '../context/SessionContext';
+import { useSession } from '../context/useSession';
 import UserMessage from '../components/shared/UserMessage';
 import BotMessage from '../components/shared/BotMessage';
 import CustomInput from '../components/shared/CustomInput';
@@ -158,7 +158,7 @@ const Chat = () => {
                   textShadow: '2px 2px 16px rgba(0, 0, 0, 0.5)'
                   }}
                 >
-                  Welcome to Project 1
+                  Welcome to Project 2
                 </Typography>
               </Box>
 

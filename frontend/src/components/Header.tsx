@@ -70,7 +70,7 @@ const Header = () => {
               }}
             >
               <Link to="/chat" style={{ textDecoration: "none", color: "goldenrod" }}>
-              Project 1
+              Project 2
               </Link>
             </Typography>
           </Box>
